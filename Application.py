@@ -1,9 +1,8 @@
-import yaybu.core.main
 import os
-
 import objc
-from Foundation import NSObject, NSLog
-from Cocoa import NSOpenPanel, NSOKButton
+from Foundation import NSObject, NSLog, NSAppleScript
+from Foundation import NSUserDefaults, NSBundle
+from Cocoa import NSInformationalAlertStyle, NSAlert, NSOpenPanel, NSOKButton
 from ScriptingBridge import SBApplication
 
 ARGV0 = os.environ['ARGVZERO']
@@ -31,6 +30,26 @@ def find_best_yaybu_terminal():
     except StopIteration:
         return None, None
 
+def install_command_line_tools():
+    target = '/usr/local/bin/yaybu'
+    if os.path.exists(target):
+        NSLog("Command line tools already installed")
+        return
+
+    alert = NSAlert.alloc().init()
+    alert.setMessageText_("Enable command line support?")
+    alert.setInformativeText_("Yaybu can install a symlink at '/usr/local/bin/yaybu' allowing you to run yaybu from a terminal via the 'yaybu' command.")
+    alert.setAlertStyle_(NSInformationalAlertStyle)
+    alert.addButtonWithTitle_("Yes")
+    alert.addButtonWithTitle_("No")
+
+    if alert.runModal() == "No":
+        return
+
+    source = 'do shell script "test ! -d /usr/local/bin && mkdir -p /usr/local/bin; ln -s %s %s" with administrator privileges' % (YAYBUC, target)
+    script = NSAppleScript.alloc().initWithSource_(source)
+    script.executeAndReturnError_(None)
+
 
 class ApplicationDelegate(NSObject):
 
@@ -49,7 +68,26 @@ class ApplicationDelegate(NSObject):
         tab.setTitleDisplaysWindowSize_(False)
 
     def applicationDidFinishLaunching_(self, _):
-        NSLog("applicationDidFinishLaunching_")
+        currentVersion = NSBundle.mainBundle().infoDictionary()["CFBundleVersion"]
+        NSLog("Starting Yaybu version %s" % currentVersion)
+
+        userDefaults = NSUserDefaults.standardUserDefaults()
+        lastVersion = userDefaults.stringForKey_("version")
+
+        if not lastVersion:
+            NSLog("Detected that this is a first run!")
+            self.applicationFirstRun()
+
+        if not lastVersion or lastVersion != currentVersion:
+            NSLog("Version changed from %s to %s" % (lastVersion, currentVersion))
+            self.applicationVersionChanged(lastVersion, currentVersion)
+            userDefaults.setObject_forKey_(currentVersion, "version")
+
+    def applicationFirstRun(self):
+        install_command_line_tools()
+
+    def applicationVersionChanged(self, lastVersion, currentVersion):
+        pass
 
     def applicationWillTerminate_(self, sender):
         pass
@@ -103,8 +141,6 @@ def setup_menus(app, delegate, updater):
 
 
 if __name__ == '__main__':
-    import os
-    import objc
     base_path = os.path.join(os.path.dirname(os.getcwd()), 'Frameworks')
     bundle_path = os.path.abspath(os.path.join(base_path, 'Sparkle.framework'))
     objc.loadBundle('Sparkle', globals(), bundle_path=bundle_path)
