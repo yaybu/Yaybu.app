@@ -34,10 +34,11 @@ class YaybuAppBuild(py2app):
     signing_identity = "John Carr"
 
     def setup_distribution(self):
-        self.distribution.app = ['Application.py']
+        #self.distribution.app = ['bin/Application.py']
         #self.distribution.packages = [
         #    'yaybu.core.main',
         #    ]
+        pass
 
     def initialize_options(self):
         py2app.initialize_options(self)
@@ -81,6 +82,13 @@ class YaybuAppBuild(py2app):
             })
         return dict
 
+    def update_binary_wrappers(self):
+        bindir = os.path.realpath(os.path.join(self.resdir, "../MacOS"))
+        for b in os.listdir(bindir):
+            if b == "python":
+                continue
+            system(["gcc", "main.c", "-o", os.path.join(bindir, b)])
+
     def sort_out_egg_metadata(self):
         print "Generating fake egg metadata..."
         site_packages = os.path.join(self.resdir, "lib", "python2.7", "site-packages")
@@ -109,6 +117,8 @@ class YaybuAppBuild(py2app):
         self.sign_path('Contents/Frameworks/Sparkle.framework/Versions/A')
         self.sign_path('Contents/Frameworks/Python.framework/Versions/2.7')
         self.sign_path('Contents/MacOS/python')
+        self.sign_path('Contents/MacOS/Yaybu')
+        self.sign_path('Contents/MacOS/yaybuc')
         self.sign_path('.')
 
     def build_dmg(self):
@@ -153,6 +163,7 @@ class YaybuAppBuild(py2app):
     def run_normal(self):
         py2app.run_normal(self)
 
+        self.update_binary_wrappers()
         self.sort_out_egg_metadata()
         self.sign()
         self.build_dmg()
@@ -196,5 +207,6 @@ setup(
     options=dict(py2app=dict(
         plist=plist,
         frameworks=["Sparkle.framework"],
+        extra_scripts=['bin/yaybuc.py'],
     )),
 )

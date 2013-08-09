@@ -6,12 +6,9 @@ from Foundation import NSObject, NSLog
 from Cocoa import NSOpenPanel, NSOKButton
 from ScriptingBridge import SBApplication
 
-PYTHON_PATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "MacOS", "python"))
-print PYTHON_PATH
-
+ARGV0 = os.environ['ARGVZERO']
+YAYBUC = os.path.join(os.path.dirname(ARGV0), "yaybuc")
 CUSTOM_WINDOW_TITLE = u"\u2063" + "Yaybu"
-
 
 def find_existing_yaybu_terminals():
     term = SBApplication.applicationWithBundleIdentifier_("com.apple.Terminal")
@@ -43,7 +40,7 @@ class ApplicationDelegate(NSObject):
 
     def application_openFile_(self, ns_app, path):
         terminal = SBApplication.applicationWithBundleIdentifier_("com.apple.Terminal")
-        tab = terminal.doScript_in_("clear; %s -m yaybu.core.main -C %s; exit 0;" % (PYTHON_PATH, path), None)
+        tab = terminal.doScript_in_("clear; %s; exit 0;" % (YAYBUC,), None)
         tab.setCustomTitle_(CUSTOM_WINDOW_TITLE )
         tab.setTitleDisplaysCustomTitle_(True)
         tab.setTitleDisplaysDeviceName_(False)
