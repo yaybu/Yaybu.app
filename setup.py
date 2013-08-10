@@ -19,9 +19,10 @@ site.USER_BASE = None
 site.USER_SITE = None
 """
 
-def system(command):
+def system(command, cwd=os.getcwd()):
     p = subprocess.Popen(
         command,
+        cwd = cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
         )
@@ -168,6 +169,18 @@ class YaybuAppBuild(py2app):
         system(["hdiutil", "internet-enable", "-yes", image_path])
         os.unlink(image_tmp)
 
+    def build_zip(self):
+        print "Building ZIP image (for Sparkle updates)"
+        p = os.path.join(self.dist_dir, "Yaybu.zip")
+        if os.path.exists(p):
+            os.unlink(p)
+
+        system(["zip", "-ry9", "Yaybu.zip", "Yaybu.app"], cwd=self.dist_dir)
+        signature = system(["sh", "-c", "cat Yaybu.zip | openssl dgst -sha1 -binary | openssl dgst -dss1 -sign ~/dsa_priv.pem | openssl enc -base64"], cwd=self.dist_dir)
+        signature = signature.strip()
+
+        print "Sparkle signature =", signature
+
     def run_normal(self):
         py2app.run_normal(self)
 
@@ -176,9 +189,11 @@ class YaybuAppBuild(py2app):
         self.fix_resources_bin_permissions()
         self.sign()
         self.build_dmg()
+        self.build_zip()
 
         print "Yaybu.app = ", system(["du", "-sh", os.path.join(self.dist_dir, "Yaybu.app")]).strip().split()[0]
         print "Yaybu.dmg = ", system(["du", "-sh", os.path.join(self.dist_dir, "Yaybu.dmg")]).strip().split()[0]
+        print "Yaybu.zip = ", system(["du", "-sh", os.path.join(self.dist_dir, "Yaybu.zip")]).strip().split()[0]
 
 
 plist = {
