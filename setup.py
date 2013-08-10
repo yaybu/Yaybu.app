@@ -102,6 +102,11 @@ class YaybuAppBuild(py2app):
                 egg_info,
                 os.path.join(site_packages, os.path.basename(egg_info)),
                 )
+    def fix_resources_bin_permissions(self):
+        path = os.path.join(self.resdir, "bin")
+        for b in os.listdir(path):
+            pb = os.path.join(path, b)
+            os.chmod(pb, 0755)
 
     def sign_path(self, path):
         print "Signing '%s'" % path
@@ -168,6 +173,7 @@ class YaybuAppBuild(py2app):
 
         self.update_binary_wrappers()
         self.sort_out_egg_metadata()
+        self.fix_resources_bin_permissions()
         self.sign()
         self.build_dmg()
 
