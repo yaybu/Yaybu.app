@@ -97,6 +97,8 @@ class ApplicationDelegate(NSObject):
         if window and tab:
             tab.setSelected_(True)
             window.setFrontmost_(True)
+            term = SBApplication.applicationWithBundleIdentifier_("com.apple.Terminal")
+            term.activate()
             return
 
         panel = NSOpenPanel.openPanel()
