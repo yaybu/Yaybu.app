@@ -100,7 +100,9 @@ class ApplicationDelegate(NSObject):
             term = SBApplication.applicationWithBundleIdentifier_("com.apple.Terminal")
             term.activate()
             return
+        self.openYaybufile_(None)
 
+    def openYaybufile_(self, notification):
         panel = NSOpenPanel.openPanel()
         panel.setAllowsMultipleSelection_(False)
         panel.setCanCreateDirectories_(False)
