@@ -190,6 +190,7 @@ plist = {
         "LSHandlerRank": "Owner",
         }],
     "SUFeedURL": "http://www.yaybu.com/appcast.xml",
+    "SUPublicDSAKeyFile": "dsa_pub.pem",
     }
 
 
@@ -205,6 +206,7 @@ setup(
     app=["Application.py"],
     data_files = [
         "Resources/Yaybu.icns",
+        "Resources/dsa_pub.pem",
         "Resources/bin",
         "Resources/lib",
         "Resources/libexec",
