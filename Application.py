@@ -124,7 +124,8 @@ class ApplicationDelegate(NSObject):
         install_command_line_tools()
 
     def quit_(self, notification):
-        NSLog('quit...')
+        NSLog('User request application close...')
+        NSApplication.sharedApplication().terminate_(None)
 
 def setup_menus(app, delegate, updater):
     mainmenu = NSMenu.alloc().init()
