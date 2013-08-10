@@ -9,12 +9,14 @@ ARGV0 = os.environ['ARGVZERO']
 YAYBUC = os.path.join(os.path.dirname(ARGV0), "yaybuc")
 CUSTOM_WINDOW_TITLE = u"\u2063" + "Yaybu"
 
+
 def find_existing_yaybu_terminals():
     term = SBApplication.applicationWithBundleIdentifier_("com.apple.Terminal")
     for window in term.windows():
         for tab in window.tabs():
             if CUSTOM_WINDOW_TITLE == tab.customTitle():
                 yield window, tab
+
 
 def find_best_yaybu_terminal():
     for window, tab in find_existing_yaybu_terminals():
@@ -29,6 +31,7 @@ def find_best_yaybu_terminal():
         return terminals.next()
     except StopIteration:
         return None, None
+
 
 def install_command_line_tools():
     target = '/usr/local/bin/yaybu'
@@ -117,31 +120,56 @@ class ApplicationDelegate(NSObject):
 
         self.application_openFile_(None, yaybufile)
 
+    def installCommandLineTools_(self, notification):
+        install_command_line_tools()
+
     def quit_(self, notification):
         NSLog('quit...')
 
 def setup_menus(app, delegate, updater):
-   mainmenu = NSMenu.alloc().init()
-   app.setMainMenu_(mainmenu)
-   appMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('Yaybu', '', '')
-   mainmenu.addItem_(appMenuItem)
+    mainmenu = NSMenu.alloc().init()
+    app.setMainMenu_(mainmenu)
+    appMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('Yaybu', '', '')
+    mainmenu.addItem_(appMenuItem)
 
-   appMenu = NSMenu.alloc().init()
-   appMenuItem.setSubmenu_(appMenu)
+    appMenu = NSMenu.alloc().init()
+    appMenuItem.setSubmenu_(appMenu)
 
-   aboutItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('About My Sample App...', 'about', '')
-   aboutItem.setTarget_(delegate)
-   appMenu.addItem_(aboutItem)
+    # aboutItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('About Yaybu...', 'about', '')
+    # aboutItem.setTarget_(delegate)
+    # appMenu.addItem_(aboutItem)
 
-   appMenu.addItemWithTitle_action_keyEquivalent_('Preferences...', 'prefs', '')
+    # appMenu.addItemWithTitle_action_keyEquivalent_('Preferences...', 'prefs', '')
 
-   cfu = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('Check for updates...', 'checkForUpdates:', '')
-   cfu.setTarget_(updater)
-   appMenu.addItem_(cfu)
+    openFile = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+        'Open...',
+        'openYaybufile:',
+        '',
+        )
+    openFile.setTarget_(delegate)
+    appMenu.addItem_(openFile)
 
-   quitItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('Quit', 'quit:', 'q')
-   quitItem.setTarget_(delegate)
-   appMenu.addItem_(quitItem)
+
+    iclt = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+        'Install command line tools...',
+        'installCommandLineTools:',
+        '',
+        )
+    iclt.setTarget_(delegate)
+    appMenu.addItem_(iclt)
+
+    cfu = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+        'Check for updates...',
+        'checkForUpdates:',
+        '')
+    cfu.setTarget_(updater)
+    appMenu.addItem_(cfu)
+
+    quitItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+        'Quit', 'quit:', 'q',
+        )
+    quitItem.setTarget_(delegate)
+    appMenu.addItem_(quitItem)
 
 
 if __name__ == '__main__':
