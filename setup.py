@@ -55,7 +55,10 @@ class YaybuAppBuild(py2app):
     def recipe_egg_info(self, py2app, mf):
         loader_files = []
         for d in pkg_resources.working_set:
-            if mf.findNode(d.project_name):
+            node = mf.findNode(d.project_name)
+            if not node:
+                node = mf.findNode(d.project_name.lower())
+            if node:
                 print "  -> %s.egg-info" % d.project_name
                 with open("/tmp/%s.egg-info" % d.project_name, "w") as fp:
                     fp.write("Metadata-Version: 1.0\n")
