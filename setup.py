@@ -125,6 +125,8 @@ class YaybuAppBuild(py2app):
             return
         self.sign_path('Contents/Frameworks/Sparkle.framework/Versions/A')
         self.sign_path('Contents/Frameworks/Python.framework/Versions/2.7')
+        for b in os.listdir(os.path.join(self.resdir, 'bin')):
+            self.sign_path('Contents/Resources/bin/' + b)
         self.sign_path('Contents/MacOS/python')
         self.sign_path('Contents/MacOS/Yaybu')
         self.sign_path('Contents/MacOS/yaybuc')
