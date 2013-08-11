@@ -6,8 +6,8 @@ set -e
 PYTHON_VERSION=2.7.5
 CACHE_DIR=$(pwd)/cache
 
-if [ ! -d $CACHEDIR ]; then
-    mkdir -p $CACHEDIR
+if [ ! -d $CACHE_DIR ]; then
+    mkdir -p $CACHE_DIR
 fi
 
 if [ ! -f $CACHE_DIR/Python-$PYTHON_VERSION.tar.bz2 ]; then
