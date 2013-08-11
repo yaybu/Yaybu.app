@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -v
+set -e
+
 PYTHON_VERSION=2.7.5
 CACHE_DIR=$(pwd)/cache
 
