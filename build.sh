@@ -40,11 +40,11 @@ if [ ! -f ./python/bin/python2 ]; then
     popd
 fi
 
-if [ ! -f /Users/john/Yaybu.app/python/python/Frameworks/Python.framework/Versions/2.7/bin/easy_install ]; then
+if [ ! -f python/python/Frameworks/Python.framework/Versions/2.7/bin/easy_install ]; then
     curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | ./python/bin/python
 fi
 
-if [ ! -f /Users/john/Yaybu.app/python/python/Frameworks/Python.framework/Versions/2.7/bin/pip ]; then
+if [ ! -f python/python/Frameworks/Python.framework/Versions/2.7/bin/pip ]; then
     ./python/bin/python -m easy_install pip
 fi
 
