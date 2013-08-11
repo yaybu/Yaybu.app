@@ -3,6 +3,9 @@
 set -v
 set -e
 
+YAY_COMMITISH=${YAY_COMMITISH:=master}
+YAYBU_COMMITISH=${YAYBU_COMMITISH:=master}
+
 PYTHON_VERSION=2.7.5
 CACHE_DIR=$(pwd)/cache
 
@@ -37,14 +40,20 @@ if [ ! -f ./python/bin/python2 ]; then
     popd
 fi
 
-curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | ./python/bin/python
-./python/bin/python -m easy_install py2app
-./python/bin/python -m easy_install pyobjc-core
-./python/bin/python -m easy_install pyobjc-framework-Cocoa
-./python/bin/python -m easy_install pyobjc-framework-ScriptingBridge
-./python/bin/python -m easy_install ply
-./python/bin/python -m easy_install https://pypi.python.org/packages/source/p/pycrypto/pycrypto-2.6.tar.gz
-./python/bin/python -m easy_install https://pypi.python.org/packages/source/g/greenlet/greenlet-0.4.1.zip
-./python/bin/python -m easy_install https://github.com/isotoma/yay/zipball/master
-./python/bin/python -m easy_install https://github.com/isotoma/yaybu/zipball/master
+if [ ! -f /Users/john/Yaybu.app/python/python/Frameworks/Python.framework/Versions/2.7/bin/easy_install ]; then
+    curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | ./python/bin/python
+fi
+
+if [ ! -f /Users/john/Yaybu.app/python/python/Frameworks/Python.framework/Versions/2.7/bin/pip ]; then
+    ./python/bin/python -m easy_install pip
+fi
+
+
+./python/bin/python -m pip install --upgrade \
+    -r requirements.txt \
+    git+git://github.com/isotoma/yay.git@$YAY_COMMITISH#egg=yay \
+    git+git://github.com/isotoma/yaybu.git@$YAYBU_COMMITISH#egg=yaybu
+
+
+./python/bin/python setup.py py2app
 
