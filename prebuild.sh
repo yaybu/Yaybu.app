@@ -3,6 +3,10 @@
 PYTHON_VERSION=2.7.5
 CACHE_DIR=$(pwd)/cache
 
+if [ ! -d $CACHEDIR ]; then
+    mkdir -p $CACHEDIR
+fi
+
 if [ ! -f $CACHE_DIR/Python-$PYTHON_VERSION.tar.bz2 ]; then
     curl http://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.bz2 > $CACHE_DIR/Python-$PYTHON_VERSION.tar.bz2
 fi
