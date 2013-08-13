@@ -49,11 +49,23 @@ if [ ! -f python/python/Frameworks/Python.framework/Versions/2.7/bin/pip ]; then
 fi
 
 
+if [ -d src/yay ]; then
+    YAY_REQUIREMENT="-e src/yay"
+else
+    YAY_REQUIREMENT=git+git://github.com/isotoma/yay.git@$YAY_COMMITISH#egg=yay
+fi
+
+if [ -d src/yaybu ]; then
+    YAYBU_REQUIREMENT="-e src/yaybu"
+else
+    YAYBU_REQUIREMENT=git+git://github.com/isotoma/yaybu.git@$YAYBU_COMMITISH#egg=yaybu
+fi
+
+
 ./python/bin/python -m pip install --upgrade \
     -r requirements.txt \
-    git+git://github.com/isotoma/yay.git@$YAY_COMMITISH#egg=yay \
-    git+git://github.com/isotoma/yaybu.git@$YAYBU_COMMITISH#egg=yaybu
-
+    $YAY_REQUIREMENT \
+    $YAYBU_REQUIREMENT
 
 ./python/bin/python setup.py py2app
 
