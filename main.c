@@ -869,6 +869,8 @@ static int py2app_main(int argc, char * const *argv, char * const *envp) {
     FILE *mainScriptFile;
     char* curenv = NULL;
     char* curlocale = NULL;
+    char exec_path[PATH_MAX+1];
+    uint32_t exec_path_size = sizeof(exec_path);
 
 
     if (getenv("PYTHONOPTIMIZE") != NULL) {
@@ -906,7 +908,13 @@ static int py2app_main(int argc, char * const *argv, char * const *envp) {
         return report_error(ERR_COLONPATH);
     }
     py2app_setPythonPath();
-    setenv("ARGVZERO", realpath(argv[0], NULL), 1);
+
+    if (_NSGetExecutablePath(exec_path, &exec_path_size) != 0) {
+        fprintf(stderr, "_NSGetExecutablePath failed to find current executable\n");
+        return -1;
+    }
+    exec_path[exec_path_size] = '\0';
+    setenv("ARGVZERO", realpath(exec_path, NULL), 1);
 
     /* Clear unwanted environment variable that could be set
      * by a PyObjC bundle in a parent process. Not clearing causes
@@ -1058,6 +1066,9 @@ static int py2app_main(int argc, char * const *argv, char * const *envp) {
 int main(int argc, char * *argv, char * const *envp)
 {
     int rval = 0;
+    char exec_path[PATH_MAX+1];
+    char resolved_path[PATH_MAX+1];
+    uint32_t exec_path_size = sizeof(exec_path);
     CFStringRef argv0_string;
     CFURLRef argv0_url;
     char *argv0 = NULL;
@@ -1068,19 +1079,28 @@ int main(int argc, char * *argv, char * const *envp)
         return -1;
     }
 
-    argv0 = realpath(argv[0], NULL);
-    root = dirname(dirname(dirname(argv0)));
+    if (_NSGetExecutablePath(exec_path, &exec_path_size) != 0) {
+        fprintf(stderr, "_NSGetExecutablePath failed to find current executable\n");
+        return -1;
+    }
+    exec_path[exec_path_size] = '\0';
 
-    fprintf(stderr, "%s\n", root);
+    realpath(exec_path, resolved_path);
+    root = dirname(dirname(dirname(resolved_path)));
 
-    argv0_string = py2app_CFStringCreateWithCString(NULL, root, kCFStringEncodingMacRoman);
-    free(argv0);
+    argv0_url = py2app_CFURLCreateFromFileSystemRepresentation(
+        NULL,
+        (uint8_t *)root,
+        strlen(root),
+        true
+        );
 
-    argv0_url = py2app_CFURLCreateWithFileSystemPath(NULL, argv0_string, kCFURLPOSIXPathStyle, false);
-    py2app_CFRelease(argv0_string);
+    if (!argv0_url) {
+        fprintf(stderr, "Could not cast '%s' to CFURL!\n", root);
+        return -1;
+    }
 
     py2app_main_bundle = py2app_CFBundleCreate(NULL, argv0_url);
-    py2app_CFRelease(argv0_url);
 
     if (!py2app_main_bundle) {
         fprintf(stderr, "Not bundled, exiting\n");
@@ -1093,7 +1113,10 @@ int main(int argc, char * *argv, char * const *envp)
         return -1;
     }
     rval = py2app_main(argc, argv, envp);
-    py2app_CFRelease(py2app_main_bundle);
     py2app_CFRelease(py2app_pool);
+    py2app_CFRelease(py2app_main_bundle);
+    py2app_CFRelease(argv0_url);
+    // py2app_CFRelease(argv0_string);
+    // free(argv0);
     return rval;
 }

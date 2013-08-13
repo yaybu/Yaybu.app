@@ -129,7 +129,7 @@ class YaybuAppBuild(py2app):
             self.sign_path('Contents/Resources/bin/' + b)
         self.sign_path('Contents/MacOS/python')
         self.sign_path('Contents/MacOS/Yaybu')
-        self.sign_path('Contents/MacOS/yaybuc')
+        self.sign_path('Contents/MacOS/YaybuShell')
         self.sign_path('.')
 
     def build_dmg(self):
@@ -235,6 +235,6 @@ setup(
     options=dict(py2app=dict(
         plist=plist,
         frameworks=["Sparkle.framework"],
-        extra_scripts=['bin/yaybuc.py'],
+        extra_scripts=['YaybuShell.py'],
     )),
 )

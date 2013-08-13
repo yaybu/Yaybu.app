@@ -6,7 +6,7 @@ from Cocoa import NSInformationalAlertStyle, NSAlert, NSOpenPanel, NSOKButton
 from ScriptingBridge import SBApplication
 
 ARGV0 = os.environ['ARGVZERO']
-YAYBUC = os.path.join(os.path.dirname(ARGV0), "yaybuc")
+YAYBUC = os.path.join(os.path.dirname(ARGV0), "YaybuShell")
 CUSTOM_WINDOW_TITLE = u"\u2063" + "Yaybu"
 
 
@@ -36,8 +36,9 @@ def find_best_yaybu_terminal():
 def install_command_line_tools():
     target = '/usr/local/bin/yaybu'
     if os.path.exists(target):
-        NSLog("Command line tools already installed")
-        return
+        if os.path.islink(target) and os.readlink(target) == YAYBUC:
+            NSLog("Command line tools already installed")
+            return
 
     alert = NSAlert.alloc().init()
     alert.setMessageText_("Enable command line support?")
@@ -49,7 +50,7 @@ def install_command_line_tools():
     if alert.runModal() == "No":
         return
 
-    source = 'do shell script "test ! -d /usr/local/bin && mkdir -p /usr/local/bin; ln -s %s %s" with administrator privileges' % (YAYBUC, target)
+    source = 'do shell script "test ! -d /usr/local/bin && mkdir -p /usr/local/bin; rm -f %s; ln -s %s %s" with administrator privileges' % (target, YAYBUC, target)
     script = NSAppleScript.alloc().initWithSource_(source)
     script.executeAndReturnError_(None)
 
