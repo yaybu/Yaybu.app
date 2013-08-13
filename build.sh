@@ -50,13 +50,13 @@ fi
 
 
 if [ -d src/yay ]; then
-    YAY_REQUIREMENT="-e src/yay"
+    YAY_REQUIREMENT="src/yay"
 else
     YAY_REQUIREMENT=git+git://github.com/isotoma/yay.git@$YAY_COMMITISH#egg=yay
 fi
 
 if [ -d src/yaybu ]; then
-    YAYBU_REQUIREMENT="-e src/yaybu"
+    YAYBU_REQUIREMENT="src/yaybu"
 else
     YAYBU_REQUIREMENT=git+git://github.com/isotoma/yaybu.git@$YAYBU_COMMITISH#egg=yaybu
 fi
