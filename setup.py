@@ -32,7 +32,7 @@ def system(command, cwd=os.getcwd()):
 
 class YaybuAppBuild(py2app):
 
-    signing_identity = "John Carr"
+    signing_identity = None
 
     def setup_distribution(self):
         #self.distribution.app = ['bin/Application.py']
