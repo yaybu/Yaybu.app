@@ -20,7 +20,7 @@ site.USER_SITE = None
 
 import os
 os.environ['PATH'] = '%s:%s' % (
-    os.path.join(os.environ['RESOURCEHOME'], 'bin'),
+    os.path.join(os.environ['RESOURCEPATH'], 'bin'),
     os.environ['PATH'],
     )
 """
