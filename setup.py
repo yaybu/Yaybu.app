@@ -17,6 +17,12 @@ setuptools_sitefix = """
 import site
 site.USER_BASE = None
 site.USER_SITE = None
+
+import os
+os.environ['PATH'] = '%s:%s' % (
+    os.path.join(os.environ['RESOURCEHOME'], 'bin'),
+    os.environ['PATH'],
+    )
 """
 
 def system(command, cwd=os.getcwd()):
