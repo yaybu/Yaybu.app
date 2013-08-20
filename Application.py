@@ -175,7 +175,7 @@ def setup_menus(app, delegate, updater):
 
 
 if __name__ == '__main__':
-    base_path = os.path.join(os.path.dirname(os.getcwd()), 'Frameworks')
+    base_path = os.path.join(os.path.dirname(os.environ['RESOURCEPATH']), 'Frameworks')
     bundle_path = os.path.abspath(os.path.join(base_path, 'Sparkle.framework'))
     objc.loadBundle('Sparkle', globals(), bundle_path=bundle_path)
 
