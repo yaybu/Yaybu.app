@@ -115,6 +115,8 @@ class YaybuAppBuild(py2app):
             pb = os.path.join(path, b)
             os.chmod(pb, 0755)
 
+        os.chmod(os.path.join(self.resdir, "libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac"), 0755)
+
     def sign_path(self, path):
         print "Signing '%s'" % path
         bundle_root = os.path.abspath(os.path.join(self.resdir, "..", ".."))
