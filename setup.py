@@ -190,6 +190,8 @@ class YaybuAppBuild(py2app):
         signature = signature.strip()
 
         print "Sparkle signature =", signature
+        with open(p + ".sig", "w") as fp:
+            fp.write(signature)
 
     def run_normal(self):
         py2app.run_normal(self)
