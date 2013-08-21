@@ -54,7 +54,13 @@ Driver = get_driver(getattr(Provider, config.get("storage", "driver")))
 driver = Driver(config.get("storage", "key"), config.get("storage", "secret"))
 container = driver.get_container(config.get("container", "name"))
 
+# Upload the latest dmg
+print "Uploading latest dmg as %s/Yaybu-latest.dmg" % config.get("container", "url").rstrip("/")
+with open("dist/Yaybu.dmg", "rb") as fp:
+    driver.upload_object_via_stream(iterator=fp, container=container, object_name=config.get("container", "directory").rstrip("/") + "/Yaybu-latest.dmg")
+
 # Upload the latest build
+print "Uploading latest dmg as %s" % release['url']
 with open("dist/Yaybu.zip", "rb") as fp:
     driver.upload_object_via_stream(iterator=fp, container=container, object_name=release['name'])
 
@@ -63,6 +69,7 @@ driver.supports_chunked_encoding = False
 driver.supports_s3_multipart_upload = False
 
 # Publish an updated appcast
+print "Uploading appcast"
 appcast_name = config.get("container", "directory").rstrip("/") + "/" + "appcast.xml"
 driver.upload_object_via_stream(iterator=StringIO.StringIO(appcast), container=container, object_name=appcast_name)
 
