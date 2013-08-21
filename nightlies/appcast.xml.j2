@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+   <channel>
+      <title>Yaybu Development Channel</title>
+      <link>{{ url }}/appcast.xml</link>
+      <description>Development snapshots from the Yaybu project</description>
+      <language>en</language>
+      {% for release in releases %}
+         <item>
+            <title>Build {{ release.number }}</title>
+            <description>
+            </description>
+            <pubDate>Wed, 09 Jan 2006 19:20:11 +0000</pubDate>
+            <sparkle:releaseNotesLink>http://andymatuschak.org/files/notes.html</sparkle:releaseNotesLink>
+            <enclosure url="{{ release.url }}" sparkle:version="2.0" length="{{ release.size }}" type="application/octet-stream" sparkle:dsaSignature="{{ release.signature }}" />
+         </item>
+      {% end for %}
+   </channel>
+</rss>
+
