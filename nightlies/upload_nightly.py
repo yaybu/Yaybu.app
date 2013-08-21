@@ -21,7 +21,7 @@ config.read(os.path.expanduser("~/yaybu-nightlies.cfg"))
 
 # Collect metadata about this release
 release = {}
-release['number'] = os.environ["BUILDNUMBER"]
+release['number'] = sys.argv[1]
 release['name'] = config.get("container", "directory").rstrip("/") + "/" + "Yaybu-%s.zip" % release['number']
 release['url'] = config.get("container", "url").rstrip("/") + "/" + "Yaybu-%s.zip" % release['number']
 release['size'] = os.stat("dist/Yaybu.zip").st_size
@@ -55,7 +55,7 @@ driver = Driver(config.get("storage", "key"), config.get("storage", "secret"))
 container = driver.get_container(config.get("container", "name"))
 
 # Upload the latest build
-with open("dist/Yaybu.zip", "b") as fp:
+with open("dist/Yaybu.zip", "rb") as fp:
     driver.upload_object_via_stream(iterator=fp, container=container, object_name=release['name'])
 
 # Workaround libcloud 378
