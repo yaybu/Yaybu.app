@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import ConfigParser
+import StringIO
 
 from jinja2 import Environment, FileSystemLoader
 from libcloud.storage.types import Provider
@@ -56,6 +57,10 @@ container = driver.get_container(config.get("container", "name"))
 # Upload the latest build
 with open("dist/Yaybu.zip", "b") as fp:
     driver.upload_object_via_stream(iterator=fp, container=container, object_name=release['name'])
+
+# Workaround libcloud 378
+driver.supports_chunked_encoding = False
+driver.supports_s3_multipart_upload = False
 
 # Publish an updated appcast
 appcast_name = config.get("container", "directory").rstrip("/") + "/" + "appcast.xml"
