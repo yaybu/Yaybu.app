@@ -2,10 +2,13 @@
 import json
 import os
 import sys
+import ConfigParser
 
 from jinja2 import Environment, FileSystemLoader
 from libcloud.storage.types import Provider
 from libcloud.storage.providers import get_driver
+import libcloud.security
+
 
 if not os.path.exists("dist") or not os.path.exists("nightlies"):
     print "cwd wrong? cannot continue."
@@ -39,6 +42,11 @@ appcast = template.render(
     url = config.get("container", "url"),
     releases = releases,
     )
+
+# OSX doesn't have certs in a format libcloud can use directly
+libcloud.security.CA_CERTS_PATH = [
+    os.path.abspath("Resources/cacert.pem"),
+    ]
 
 # Connect to cloud storage service
 Driver = get_driver(getattr(Provider, config.get("storage", "driver")))

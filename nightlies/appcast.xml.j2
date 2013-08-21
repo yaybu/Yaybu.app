@@ -14,7 +14,7 @@
             <sparkle:releaseNotesLink>http://andymatuschak.org/files/notes.html</sparkle:releaseNotesLink>
             <enclosure url="{{ release.url }}" sparkle:version="2.0" length="{{ release.size }}" type="application/octet-stream" sparkle:dsaSignature="{{ release.signature }}" />
          </item>
-      {% end for %}
+      {% endfor %}
    </channel>
 </rss>
 
