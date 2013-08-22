@@ -283,7 +283,6 @@ setup(
             'py2app': YaybuAppBuild,
     },
     options=dict(py2app=dict(
-        plist=plist,
         frameworks=["Sparkle.framework"],
         extra_scripts=['YaybuShell.py'],
         no_chdir=True,

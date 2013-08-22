@@ -67,5 +67,5 @@ fi
     $YAY_REQUIREMENT \
     $YAYBU_REQUIREMENT
 
-./python/bin/python setup.py py2app
+# ./python/bin/python setup.py py2app
 
