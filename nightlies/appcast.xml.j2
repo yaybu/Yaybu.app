@@ -12,7 +12,7 @@
             </description>
             <pubDate>Wed, 09 Jan 2006 19:20:11 +0000</pubDate>
             <sparkle:releaseNotesLink>http://andymatuschak.org/files/notes.html</sparkle:releaseNotesLink>
-            <enclosure url="{{ release.url }}" sparkle:version="0.0.{{ release.number }}" length="{{ release.size }}" type="application/octet-stream" sparkle:dsaSignature="{{ release.signature }}" />
+            <enclosure url="{{ release.url }}" sparkle:version="{{ release.number }}" length="{{ release.size }}" type="application/octet-stream" sparkle:dsaSignature="{{ release.signature }}" />
          </item>
       {% endfor %}
    </channel>
