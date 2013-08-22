@@ -216,7 +216,7 @@ plist = {
         "LSItemContentTypes": ["public.data"],
         "LSHandlerRank": "Owner",
         }],
-    "SUFeedURL": "http://yaybu.com/nightles/osx/appcast.xml",
+    "SUFeedURL": "http://yaybu.com/nightlies/osx/appcast.xml",
     "SUPublicDSAKeyFile": "dsa_pub.pem",
     }
 
