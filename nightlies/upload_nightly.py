@@ -36,6 +36,9 @@ if os.path.exists("nightlies.json"):
     releases = json.load(open("nightlies.json"))
 releases.insert(0, release)
 
+# Only keep the past 10 releases
+releases = releases[:10]
+
 # Ensure we can fill in teh template before we connect to cloud storage service
 env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)))
 template = env.get_template('appcast.xml.j2')
