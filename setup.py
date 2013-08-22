@@ -93,6 +93,7 @@ class YaybuAppBuild(py2app):
         return dict
 
     def strip_files(self, files):
+        from py2app.utils import strip_files
         # This method is originally defined in py2app, but we have to bodge it to not strip Sparkle.framework :-/
         unstripped = 0
         stripfiles = []
