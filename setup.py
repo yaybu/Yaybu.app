@@ -134,6 +134,7 @@ class YaybuAppBuild(py2app):
             os.chmod(pb, 0755)
 
         os.chmod(os.path.join(self.resdir, "libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac"), 0755)
+        os.chmod(os.path.join(self.resdir, "../Frameworks/Sparkle.framework/Versions/A/Resources/relaunch"), 0755)
 
     def fix_sparkle(self):
         print "Fixing sparkle install name"
