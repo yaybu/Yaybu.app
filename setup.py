@@ -136,8 +136,8 @@ class YaybuAppBuild(py2app):
 
     def fix_sparkle(self):
         # FIXME: might need to update Sparkle ID:
-        # @executable_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle
-        # @loader_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle
+        # @executable_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle
+        # @loader_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle
         pass
 
     def sign_path(self, path):
