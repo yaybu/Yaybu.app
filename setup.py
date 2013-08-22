@@ -10,7 +10,7 @@ import sys
 
 from setuptools import setup, find_packages
 import pkg_resources
-from py2app.utils import strip_files
+from py2app.util import strip_files
 from py2app.build_app import py2app
 
 
