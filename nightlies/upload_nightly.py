@@ -83,6 +83,8 @@ objects_to_keep = set(r['name'] for r in releases)
 objects_to_keep.add('%s/appcast.xml' % base_directory)
 objects_to_keep.add('%s/Yaybu-latest.dmg' % base_directory)
 
+print objects_to_keep
+
 for obj in container.list_objects():
     if not obj.name.startswith(base_directory + "/"):
         continue
