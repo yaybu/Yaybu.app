@@ -136,10 +136,12 @@ class YaybuAppBuild(py2app):
         os.chmod(os.path.join(self.resdir, "libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac"), 0755)
 
     def fix_sparkle(self):
+        print "Fixing sparkle install name"
         path = os.path.join(self.resdir, "..", "Frameworks/Sparkle.framework/Versions/A/Sparkle")
-        old_install_name = "@executable_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle"
+        # old_install_name = "@executable_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle"
         new_install_name = "@loader_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle"
-        system(['install_name_tool', '-change', old_install_name, new_install_name, path])
+        # system(['install_name_tool', '-change', old_install_name, new_install_name, path])
+        system(['install_name_tool', '-id', new_install_name, path])
 
     def sign_path(self, path):
         print "Signing '%s'" % path
