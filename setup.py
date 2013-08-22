@@ -40,7 +40,7 @@ def system(command, cwd=os.getcwd()):
 class YaybuAppBuild(py2app):
 
     user_options = py2app.user_options + [
-        ("build=",       "b", "build number"),
+        ("build-number=",       "b", "build number"),
         ("signing-identity=",        "s", "identity to sign app with"),
         ]
 
