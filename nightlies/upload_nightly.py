@@ -84,7 +84,7 @@ objects_to_keep.add('%s/appcast.xml' % base_directory)
 objects_to_keep.add('%s/Yaybu-latest.dmg' % base_directory)
 
 for obj in container.list_objects():
-    if not obj.name.starts(base_directory + "/"):
+    if not obj.name.startswith(base_directory + "/"):
         continue
     if obj.name in objects_to_keep:
         continue
