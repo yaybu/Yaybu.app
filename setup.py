@@ -102,7 +102,7 @@ class YaybuAppBuild(py2app):
                 continue
             unstripped += os.stat(fn).st_size
             stripfiles.append(fn)
-            log.info('stripping %s', os.path.basename(fn))
+            print 'stripping %s' % os.path.basename(fn)
         strip_files(stripfiles, dry_run=self.dry_run, verbose=self.verbose)
         stripped = 0
         for fn in stripfiles:
