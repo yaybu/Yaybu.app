@@ -39,16 +39,21 @@ def system(command, cwd=os.getcwd()):
 
 class YaybuAppBuild(py2app):
 
-    signing_identity = None
+    user_options = py2app.user_options + [
+        ("build=",       "b", "build number"),
+        ("signing-identity=",        "s", "identity to sign app with"),
+        ]
 
     def setup_distribution(self):
-        #self.distribution.app = ['bin/Application.py']
+        #self.distribution.app = ['Application.py']
         #self.distribution.packages = [
         #    'yaybu.core.main',
         #    ]
         pass
 
     def initialize_options(self):
+        self.signing_identity = None
+        self.build_number = 0
         py2app.initialize_options(self)
 
     def finalize_options(self):
@@ -220,6 +225,26 @@ class YaybuAppBuild(py2app):
         with open(p + ".sig", "w") as fp:
             fp.write(signature)
 
+    def setup_plist(self):
+        version = pkg_resources.get_distribution('Yaybu').version
+
+        self.plist = {
+            "CFBundleVersion": self.build_number,
+            "CFBundleShortVersionString": "%s (%s)" % (version, self.build_number),
+            "CFBundleIconFile" : "Yaybu.icns",
+            "CFBundleIdentifier" : "com.yaybu.Yaybu",
+            "CFBundleDocumentTypes": [{
+                "LSItemContentTypes": ["public.data"],
+                "LSHandlerRank": "Owner",
+                }],
+            "SUFeedURL": "http://yaybu.com/nightlies/osx/appcast.xml",
+            "SUPublicDSAKeyFile": "dsa_pub.pem",
+            }
+
+    def run(self):
+        self.setup_plist()
+        py2app.run(self)
+
     def run_normal(self):
         py2app.run_normal(self)
 
@@ -234,19 +259,6 @@ class YaybuAppBuild(py2app):
         print "Yaybu.app = ", system(["du", "-sh", os.path.join(self.dist_dir, "Yaybu.app")]).strip().split()[0]
         print "Yaybu.dmg = ", system(["du", "-sh", os.path.join(self.dist_dir, "Yaybu.dmg")]).strip().split()[0]
         print "Yaybu.zip = ", system(["du", "-sh", os.path.join(self.dist_dir, "Yaybu.zip")]).strip().split()[0]
-
-
-plist = {
-    "CFBundleVersion": VERSION,
-    "CFBundleIconFile" : "Yaybu.icns",
-    "CFBundleIdentifier" : "com.yaybu.Yaybu",
-    "CFBundleDocumentTypes": [{
-        "LSItemContentTypes": ["public.data"],
-        "LSHandlerRank": "Owner",
-        }],
-    "SUFeedURL": "http://yaybu.com/nightlies/osx/appcast.xml",
-    "SUPublicDSAKeyFile": "dsa_pub.pem",
-    }
 
 
 setup(
