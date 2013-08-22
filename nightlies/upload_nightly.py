@@ -88,7 +88,7 @@ for obj in container.list_objects():
         continue
     if obj.name in objects_to_keep:
         continue
-    print "Deleting %s" obj.name
+    print "Deleting %s" % obj.name
 
 # Remember this release so the appcast contains past releases
 with open("nightlies.json", "w") as fp:
