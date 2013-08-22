@@ -19,11 +19,14 @@ if not os.path.exists("dist") or not os.path.exists("nightlies"):
 config = ConfigParser.ConfigParser()
 config.read(os.path.expanduser("~/yaybu-nightlies.cfg"))
 
+base_directory = config.get("container", "directory").rstrip("/")
+base_url = config.get("container", "url").rstrip("/")
+
 # Collect metadata about this release
 release = {}
 release['number'] = sys.argv[1]
-release['name'] = config.get("container", "directory").rstrip("/") + "/" + "Yaybu-%s.zip" % release['number']
-release['url'] = config.get("container", "url").rstrip("/") + "/" + "Yaybu-%s.zip" % release['number']
+release['name'] = base_directory + "/Yaybu-%s.zip" % release['number']
+release['url'] = base_url + "/Yaybu-%s.zip" % release['number']
 release['size'] = os.stat("dist/Yaybu.zip").st_size
 
 with open("dist/Yaybu.zip.sig") as fp:
@@ -60,7 +63,7 @@ container = driver.get_container(config.get("container", "name"))
 # Upload the latest dmg
 print "Uploading latest dmg as %s/Yaybu-latest.dmg" % config.get("container", "url").rstrip("/")
 with open("dist/Yaybu.dmg", "rb") as fp:
-    driver.upload_object_via_stream(iterator=fp, container=container, object_name=config.get("container", "directory").rstrip("/") + "/Yaybu-latest.dmg")
+    driver.upload_object_via_stream(iterator=fp, container=container, object_name=base_directory + "/Yaybu-latest.dmg")
 
 # Upload the latest build
 print "Uploading latest dmg as %s" % release['url']
@@ -73,8 +76,19 @@ driver.supports_s3_multipart_upload = False
 
 # Publish an updated appcast
 print "Uploading appcast"
-appcast_name = config.get("container", "directory").rstrip("/") + "/" + "appcast.xml"
+appcast_name = base_directory + "/appcast.xml"
 driver.upload_object_via_stream(iterator=StringIO.StringIO(appcast), container=container, object_name=appcast_name)
+
+objects_to_keep = set(r['name'] for r in releases)
+objects_to_keep.add('%s/appcast.xml' % base_directory)
+objects_to_keep.add('%s/Yaybu-latest.dmg' % base_directory)
+
+for obj in container.list_objects():
+    if not obj.name.starts(base_directory + "/"):
+        continue
+    if obj.name in objects_to_keep:
+        continue
+    print "Deleting %s" obj.name
 
 # Remember this release so the appcast contains past releases
 with open("nightlies.json", "w") as fp:
