@@ -92,6 +92,23 @@ class YaybuAppBuild(py2app):
             })
         return dict
 
+    def strip_files(self, files):
+        # This method is originally defined in py2app, but we have to bodge it to not strip Sparkle.framework :-/
+        unstripped = 0
+        stripfiles = []
+        for fn in files:
+            if "Sparkle.framework" in fn and "relaunch" in fn:
+                print "not stripping '%s'" % fn
+                continue
+            unstripped += os.stat(fn).st_size
+            stripfiles.append(fn)
+            log.info('stripping %s', os.path.basename(fn))
+        strip_files(stripfiles, dry_run=self.dry_run, verbose=self.verbose)
+        stripped = 0
+        for fn in stripfiles:
+            stripped += os.stat(fn).st_size
+        print 'stripping saved %d bytes (%d / %d)', unstripped - stripped, stripped, unstripped
+
     def update_binary_wrappers(self):
         bindir = os.path.realpath(os.path.join(self.resdir, "../MacOS"))
         for b in os.listdir(bindir):
@@ -116,6 +133,12 @@ class YaybuAppBuild(py2app):
             os.chmod(pb, 0755)
 
         os.chmod(os.path.join(self.resdir, "libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac"), 0755)
+
+    def fix_sparkle(self):
+        # FIXME: might need to update Sparkle ID:
+        # @executable_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle
+        # @loader_path/../Frameworks/Sparkle.framework/Versions/A/Sparkle
+        pass
 
     def sign_path(self, path):
         print "Signing '%s'" % path
