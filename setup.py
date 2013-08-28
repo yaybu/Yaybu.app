@@ -223,7 +223,6 @@ class YaybuAppBuild(py2app):
         self.plist = {
             "CFBundleVersion": self.build_number,
             "CFBundleShortVersionString": "%s (%s)" % (version, self.build_number),
-            "CFBundleIconFile" : "Yaybu.icns",
             "CFBundleIdentifier" : "com.yaybu.Yaybu",
             "CFBundleDocumentTypes": [{
                 "LSItemContentTypes": ["public.data"],
@@ -234,6 +233,8 @@ class YaybuAppBuild(py2app):
             }
 
     def run(self):
+        self.iconfile = "Resources/Yaybu.icns"
+
         self.setup_plist()
         py2app.run(self)
 
