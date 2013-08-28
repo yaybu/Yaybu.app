@@ -132,13 +132,7 @@ class YaybuAppBuild(py2app):
                 egg_info,
                 os.path.join(site_packages, os.path.basename(egg_info)),
                 )
-    def fix_resources_bin_permissions(self):
-        path = os.path.join(self.resdir, "bin")
-        for b in os.listdir(path):
-            pb = os.path.join(path, b)
-            os.chmod(pb, 0755)
-
-        os.chmod(os.path.join(self.resdir, "libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac"), 0755)
+    def fix_bin_permissions(self):
         os.chmod(os.path.join(self.resdir, "../Frameworks/Sparkle.framework/Versions/A/Resources/relaunch"), 0755)
 
     def fix_sparkle(self):
@@ -165,8 +159,6 @@ class YaybuAppBuild(py2app):
             return
         self.sign_path('Contents/Frameworks/Sparkle.framework/Versions/A')
         self.sign_path('Contents/Frameworks/Python.framework/Versions/2.7')
-        for b in os.listdir(os.path.join(self.resdir, 'bin')):
-            self.sign_path('Contents/Resources/bin/' + b)
         self.sign_path('Contents/MacOS/python')
         self.sign_path('Contents/MacOS/Yaybu')
         self.sign_path('Contents/MacOS/YaybuShell')
@@ -250,7 +242,7 @@ class YaybuAppBuild(py2app):
 
         self.update_binary_wrappers()
         self.sort_out_egg_metadata()
-        self.fix_resources_bin_permissions()
+        self.fix_bin_permissions()
         self.fix_sparkle()
         self.sign()
         self.build_dmg()
@@ -274,10 +266,7 @@ setup(
     data_files = [
         "Resources/Yaybu.icns",
         "Resources/dsa_pub.pem",
-        "Resources/bin",
-        "Resources/lib",
-        "Resources/libexec",
-        "Resources/share",
+        "Resources/cacert.pem",
         ],
     cmdclass = {
             'py2app': YaybuAppBuild,
