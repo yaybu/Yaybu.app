@@ -17,7 +17,7 @@ if not os.path.exists("dist") or not os.path.exists("nightlies"):
 
 # Gather any keys and container details
 config = ConfigParser.ConfigParser()
-config.read(os.path.expanduser("~/yaybu-%s.cfg" % sys.argv[1]))
+config.read(os.path.expanduser("~/yaybu-%s.cfg" % sys.argv[2]))
 
 base_directory = config.get("container", "directory").rstrip("/")
 base_url = config.get("container", "url").rstrip("/")
