@@ -42,6 +42,7 @@ class YaybuAppBuild(py2app):
     user_options = py2app.user_options + [
         ("build-number=",       "b", "build number"),
         ("signing-identity=",        "s", "identity to sign app with"),
+        ("channel=", "c", "update channel to use"),
         ]
 
     def setup_distribution(self):
@@ -54,6 +55,7 @@ class YaybuAppBuild(py2app):
     def initialize_options(self):
         self.signing_identity = None
         self.build_number = 0
+        self.channel = "nightlies"
         py2app.initialize_options(self)
 
     def finalize_options(self):
@@ -228,7 +230,7 @@ class YaybuAppBuild(py2app):
                 "LSItemContentTypes": ["public.data"],
                 "LSHandlerRank": "Owner",
                 }],
-            "SUFeedURL": "http://yaybu.com/nightlies/osx/appcast.xml",
+            "SUFeedURL": "http://yaybu.com/%(channel)s/osx/appcast.xml" % dict(channel=self.channel),
             "SUPublicDSAKeyFile": "dsa_pub.pem",
             }
 
