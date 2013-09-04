@@ -17,7 +17,7 @@ if not os.path.exists("dist") or not os.path.exists("nightlies"):
 
 # Gather any keys and container details
 config = ConfigParser.ConfigParser()
-config.read(os.path.expanduser("~/yaybu-nightlies.cfg"))
+config.read(os.path.expanduser("~/yaybu-%s.cfg" % sys.argv[1]))
 
 base_directory = config.get("container", "directory").rstrip("/")
 base_url = config.get("container", "url").rstrip("/")
@@ -35,8 +35,8 @@ with open("dist/Yaybu.zip.sig") as fp:
 # Load up metadata about existing releases and add new release
 # Releases are sorted newest first
 releases = []
-if os.path.exists("nightlies.json"):
-    releases = json.load(open("nightlies.json"))
+if os.path.exists("%s.json" % sys.argv[2]):
+    releases = json.load(open("%s.json" % sys.argv[2]))
 releases.insert(0, release)
 
 # Only keep the past 10 releases
@@ -92,6 +92,6 @@ for obj in container.list_objects():
     obj.delete()
 
 # Remember this release so the appcast contains past releases
-with open("nightlies.json", "w") as fp:
+with open("%s.json" % sys.argv[2], "w") as fp:
     json.dump(releases, fp, indent=4)
 
