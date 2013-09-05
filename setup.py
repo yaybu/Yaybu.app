@@ -61,6 +61,7 @@ class YaybuAppBuild(py2app):
     def finalize_options(self):
         py2app.finalize_options(self)
         self.setup_distribution()
+        self.setup_plist()
 
     def recipe_distutils(self, py2app, mf):
         if not mf.findNode('distutils.command.install'):
@@ -236,8 +237,6 @@ class YaybuAppBuild(py2app):
 
     def run(self):
         self.iconfile = "Resources/Yaybu.icns"
-
-        self.setup_plist()
         py2app.run(self)
 
     def run_normal(self):
