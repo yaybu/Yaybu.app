@@ -6,6 +6,7 @@ import ConfigParser
 import StringIO
 from docutils.core import publish_parts
 from lxml import etree
+import pkg_resources
 
 from jinja2 import Environment, FileSystemLoader
 from libcloud.storage.types import Provider
@@ -46,6 +47,7 @@ base_url = config.get("container", "url").rstrip("/")
 release = {}
 release['number'] = sys.argv[1]
 release['name'] = base_directory + "/Yaybu-%s.zip" % release['number']
+release['version'] = pkg_resources.get_distribution('Yaybu').version
 release['url'] = base_url + "/Yaybu-%s.zip" % release['number']
 release['size'] = os.stat("dist/Yaybu.zip").st_size
 release['changelog'] = get_changelog()

@@ -7,12 +7,19 @@
       <language>en</language>
       {% for release in releases %}
          <item>
-            <title>Build {{ release.number }}</title>
+            <title>Version {{ release.version }} ({{ release.number }})</title>
             <description><![CDATA[
             {{ release.changelog }}
             ]]></description>
             <pubDate>Wed, 09 Jan 2006 19:20:11 +0000</pubDate>
-            <enclosure url="{{ release.url }}" sparkle:version="{{ release.number }}" length="{{ release.size }}" type="application/octet-stream" sparkle:dsaSignature="{{ release.signature }}" />
+            <enclosure
+                url="{{ release.url }}"
+                sparkle:shortVersionString="{{ release.version }} ({{ release.number }})"
+                sparkle:version="{{ release.number }}"
+                length="{{ release.size }}"
+                type="application/octet-stream"
+                sparkle:dsaSignature="{{ release.signature }}"
+                />
          </item>
       {% endfor %}
    </channel>
