@@ -6,6 +6,7 @@ modulegraph==0.10.4
 altgraph==0.10.2
 macholib==1.5.1
 py2app==0.7.3
+docutils
 
 # Dependencies for runtime
 Jinja2==2.7
