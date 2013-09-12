@@ -51,6 +51,7 @@ release['version'] = pkg_resources.get_distribution('Yaybu').version
 release['url'] = base_url + "/Yaybu-%s.zip" % release['number']
 release['size'] = os.stat("dist/Yaybu.zip").st_size
 release['changelog'] = get_changelog()
+release['date'] = datetime.datetime.now().strftime("%a, %b %m %Y %H:%M:%S +0000")
 
 with open("dist/Yaybu.zip.sig") as fp:
     release['signature'] = fp.read()
