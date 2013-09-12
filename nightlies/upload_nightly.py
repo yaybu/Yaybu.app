@@ -4,11 +4,31 @@ import os
 import sys
 import ConfigParser
 import StringIO
+from docutils.core import publish_parts
+from lxml import etree
 
 from jinja2 import Environment, FileSystemLoader
 from libcloud.storage.types import Provider
 from libcloud.storage.providers import get_driver
 import libcloud.security
+
+def get_changelog():
+    output = []
+    for heading, filename in [("Yaybu", "src/yaybu/CHANGES"), ("Yay", "src/yay/CHANGES")]:
+        output.append("<h1>%s</h1>\n" % heading)
+        source = open(filename).read()
+        parts = publish_parts(
+            source=source,
+            writer_name="html",
+            settings_overrides={
+                'initial_header_level': 2,
+                },
+            )
+        html = parts['html_body']
+        root = etree.parse(StringIO.StringIO(html), parser=etree.HTMLParser())
+        elem = root.xpath("/html/body/div/div")[0]
+        output.extend(etree.tostring(e) for e in elem)
+    return "\n".join(output)
 
 
 if not os.path.exists("dist") or not os.path.exists("nightlies"):
@@ -28,6 +48,7 @@ release['number'] = sys.argv[1]
 release['name'] = base_directory + "/Yaybu-%s.zip" % release['number']
 release['url'] = base_url + "/Yaybu-%s.zip" % release['number']
 release['size'] = os.stat("dist/Yaybu.zip").st_size
+release['changelog'] = get_changelog()
 
 with open("dist/Yaybu.zip.sig") as fp:
     release['signature'] = fp.read()
