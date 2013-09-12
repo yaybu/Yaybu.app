@@ -7,6 +7,7 @@ import StringIO
 from docutils.core import publish_parts
 from lxml import etree
 import pkg_resources
+import datetime
 
 from jinja2 import Environment, FileSystemLoader
 from libcloud.storage.types import Provider
