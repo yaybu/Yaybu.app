@@ -135,6 +135,14 @@ class YaybuAppBuild(py2app):
                 egg_info,
                 os.path.join(site_packages, os.path.basename(egg_info)),
                 )
+
+    def fix_pricing_json(self):
+        print "Bundling pricing.json..."
+        self.copy_file(
+            os.path.join(pkg_resources.get_distribution("libcloud").location, "libcloud", "data", "pricing.json"),
+            os.path.join(self.resdir, "pricing.json"),
+            )
+
     def fix_bin_permissions(self):
         os.chmod(os.path.join(self.resdir, "../Frameworks/Sparkle.framework/Versions/A/Resources/relaunch"), 0755)
 
@@ -244,6 +252,7 @@ class YaybuAppBuild(py2app):
 
         self.update_binary_wrappers()
         self.sort_out_egg_metadata()
+        self.fix_pricing_json()
         self.fix_bin_permissions()
         self.fix_sparkle()
         self.sign()

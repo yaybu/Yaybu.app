@@ -15,6 +15,15 @@ libcloud.security.CA_CERTS_PATH.append(
     os.path.join(os.environ["RESOURCEPATH"], "cacert.pem")
         )
 
+# yaybu/yaybu#117 - pricing.json is loaded in a naive way by libcloud that
+# doesnt allow for the objects in PYTHONPATH to be zips. So ship it out of
+# library.zip in RESOURCEPATH
+import libcloud.pricing
+def get_pricing_file_path(file_path=None):
+    return os.path.join(os.environ["RESOURCEPATH"], "pricing.json")
+libcloud.pricing.get_pricing_file_path = get_pricing_file_path
+
+
 if __name__ == "__main__":
     main()
 
