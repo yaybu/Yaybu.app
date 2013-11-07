@@ -139,7 +139,7 @@ class YaybuAppBuild(py2app):
     def fix_pricing_json(self):
         print "Bundling pricing.json..."
         self.copy_file(
-            os.path.join(pkg_resources.get_distribution("libcloud").location, "libcloud", "data", "pricing.json"),
+            os.path.join(pkg_resources.get_distribution("apache-libcloud").location, "libcloud", "data", "pricing.json"),
             os.path.join(self.resdir, "pricing.json"),
             )
 
