@@ -1053,10 +1053,10 @@ static int py2app_main(int argc, char * const *argv, char * const *envp) {
     mainScriptFile = fopen(c_mainScript, "r");
     rval = py2app_PyRun_SimpleFile(mainScriptFile, c_mainScript);
     fclose(mainScriptFile);
-    
-    if (rval) {
-        rval = report_script_error(ERR_PYTHONEXCEPTION);
-    }
+
+    // if (rval) {
+    //    rval = report_script_error(ERR_PYTHONEXCEPTION);
+    //}
 
     py2app_Py_Finalize();
 
