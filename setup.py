@@ -7,6 +7,7 @@ import shutil
 import StringIO
 import subprocess
 import sys
+import pkgutil
 
 from setuptools import setup, find_packages
 import pkg_resources
