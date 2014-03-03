@@ -139,7 +139,7 @@ class YaybuAppBuild(py2app):
 
     def bundle_cacert_pem(self):
         print "Bundling cacert.pem..."
-        cacerts = pkgutil.get_dat("requests", "cacerts.pem")
+        cacerts = pkgutil.get_data("requests", "cacerts.pem")
         if not cacerts:
             raise SystemExit("Unable to find cacerts.pem in requests module")
         with open(os.path.join(self.resdir, "cacerts.pem"), "w") as fp:
