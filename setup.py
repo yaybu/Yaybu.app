@@ -136,6 +136,14 @@ class YaybuAppBuild(py2app):
                 os.path.join(site_packages, os.path.basename(egg_info)),
                 )
 
+    def bundle_cacert_pem(self):
+        print "Bundling cacert.pem..."
+        cacerts = pkgutil.get_dat("requests", "cacerts.pem")
+        if not cacerts:
+            raise SystemExit("Unable to find cacerts.pem in requests module")
+        with open(os.path.join(self.resdir, "cacerts.pem"), "w") as fp:
+            fp.write(cacerts)
+
     def fix_pricing_json(self):
         print "Bundling pricing.json..."
         self.copy_file(
@@ -252,6 +260,7 @@ class YaybuAppBuild(py2app):
 
         self.update_binary_wrappers()
         self.sort_out_egg_metadata()
+        self.bundle_cacert_pem()
         self.fix_pricing_json()
         self.fix_bin_permissions()
         self.fix_sparkle()
@@ -277,7 +286,6 @@ setup(
     data_files = [
         "Resources/Yaybu.icns",
         "Resources/dsa_pub.pem",
-        "Resources/cacert.pem",
         ],
     cmdclass = {
             'py2app': YaybuAppBuild,

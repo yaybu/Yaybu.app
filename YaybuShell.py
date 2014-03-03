@@ -5,6 +5,13 @@ from yaybu.core.main import main
 from yay import lextab
 from yay import parsetab
 
+
+# Requests bundles cacert.pem, but it can't see it inside library.zip
+# The bundler will ship cacert.pem alongside yaybu.exe
+import requests.certs
+requests.certs.where = lambda: os.path.join(os.environ["RESOURCEPATH"], "cacert.pem")
+
+
 # CA certs on darwin are in the system keyring - they can be readily accessed with commands like:
 #   security export -k /System/Library/Keychains/SystemCACertificates.keychain -t certs
 # However i'm not sure how libcloud/python can take a stream of certs - it looks like the certs have to exist on disk!!
