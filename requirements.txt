@@ -1,26 +1,4 @@
-# Find links
---find-linkshttps://gevent.googlecode.com/files/gevent-1.0rc2.tar.gz
+-r requirements/yaybu.app.txt
 
-# Dependencies for build
-modulegraph==0.10.4
-altgraph==0.10.2
-macholib==1.5.1
-py2app==0.7.3
-docutils==0.11
-lxml==3.2.3
-
-# Dependencies for runtime
-Jinja2==2.7
-MarkupSafe==0.18
-apache-libcloud==0.13.0
-gevent==1.0rc2
-greenlet==0.4.1
-lockfile==0.9.1
-paramiko==1.11.0
-ply==3.4
-pycrypto==2.6
-pyobjc-core==2.5.1
-pyobjc-framework-Cocoa==2.5.1
-pyobjc-framework-ScriptingBridge==2.5.1
-python-dateutil==1.5
-
+./src/yay
+./src/yaybu
