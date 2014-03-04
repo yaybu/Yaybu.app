@@ -13,6 +13,8 @@ from jinja2 import Environment, FileSystemLoader
 from libcloud.storage.types import Provider
 from libcloud.storage.providers import get_driver
 import libcloud.security
+import requests.certs
+
 
 def get_changelog():
     output = []
@@ -77,7 +79,7 @@ appcast = template.render(
 
 # OSX doesn't have certs in a format libcloud can use directly
 libcloud.security.CA_CERTS_PATH = [
-    os.path.abspath("Resources/cacert.pem"),
+    requests.certs.where(),
     ]
 
 # Connect to cloud storage service
