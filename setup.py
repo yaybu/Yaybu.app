@@ -11,9 +11,30 @@ import pkgutil
 
 from setuptools import setup, find_packages
 import pkg_resources
+import py2app.util
 from py2app.util import strip_files
 from py2app.build_app import py2app
 
+
+# Patch py2app extension loaders to work with gevent
+py2app.util.LOADER = """
+def __load():
+    imp = __import__("imp")
+    os = __import__("os")
+    sys = __import__("sys")
+    ext = %r
+    for path in sys.path:
+        if not path.endswith('lib-dynload'):
+            continue
+        ext_path = os.path.join(path, ext)
+        if os.path.exists(ext_path):
+            mod = imp.load_dynamic(__name__, ext_path)
+            break
+    else:
+        raise ImportError(repr(ext) + " not found")
+__load()
+del __load
+"""
 
 setuptools_sitefix = """
 import site
