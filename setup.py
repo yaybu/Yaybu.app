@@ -11,13 +11,13 @@ import pkgutil
 
 from setuptools import setup, find_packages
 import pkg_resources
-import py2app.util
+import py2app.util as py2app_util
 from py2app.util import strip_files
 from py2app.build_app import py2app
 
 
 # Patch py2app extension loaders to work with gevent
-py2app.util.LOADER = """
+py2app_util.LOADER = """
 def __load():
     imp = __import__("imp")
     os = __import__("os")
